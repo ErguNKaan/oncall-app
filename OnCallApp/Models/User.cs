@@ -4,20 +4,20 @@ public class User
     public int UnitId { get; set; }
     public int RoleId { get; set; }
     
-    public string FullName { get; set; }
-    public string Email { get; set; }
-    public string PhoneNumber { get; set; }
+    public required string FullName { get; set; }
+    public required string Email { get; set; }
+    public required string PhoneNumber { get; set; }
     
-    public string PasswordHash { get; set; } // PBKDF2 ile hashlenmiş şifre
-    public bool MustChangePassword { get; set; } // İlk girişte şifre değiştirme zorunluluğu
-    public int AccessFailedCount { get; set; } // Başarısız giriş sayacı
-    public DateTime? LockoutEndAt { get; set; } // Hesap kilitlenme süresi
-    public DateTime? LastLoginAt { get; set; } // Son giriş zamanı
+    public required string PasswordHash { get; set; } // hashlenmiş şifre
+    public bool MustChangePassword { get; set; } // ilk girişte şifre değiştirme zorunluluğu
+    public int AccessFailedCount { get; set; } // başarısız giriş sayacı
+    public DateTime? LockoutEndAt { get; set; } // hesap kilitlenme süresi
+    public DateTime? LastLoginAt { get; set; } // son giriş zamanı
     
-    public bool IncludeInRotation { get; set; } // İcap rotasyonuna dahil mi?
-    public bool IsActive { get; set; } // Pasif kullanıcı sisteme giremez
+    public bool IncludeInRotation { get; set; } // icap rotasyonuna dahil mi?
+    public bool IsActive { get; set; } // pasif kullanıcı sisteme giremez
     
     // İlişkiler
-    public Unit Unit { get; set; }
-    public Role Role { get; set; }
+    public Unit Unit { get; set; } = null!;
+    public Role Role { get; set; } = null!;
 }

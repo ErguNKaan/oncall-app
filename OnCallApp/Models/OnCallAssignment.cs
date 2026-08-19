@@ -21,8 +21,8 @@ public class OnCallAssignment
     public string? Note { get; set; } // "Uygun yedek bulunamadı" vb. notlar için
 
     // İlişkiler
-    public User PrimaryUser { get; set; }
-    public User ResponsibleUser { get; set; }
+    public User PrimaryUser { get; set; } = null!;
+    public User ResponsibleUser { get; set; } = null!;
 }
 
 // Bu enum'ları kodda magic number dolaşmaması için kullanıyoruz
