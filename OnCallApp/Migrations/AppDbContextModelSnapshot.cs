@@ -168,13 +168,13 @@ namespace OnCallApp.Migrations
                     b.HasOne("User", "PrimaryUser")
                         .WithMany()
                         .HasForeignKey("PrimaryUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("User", "ResponsibleUser")
                         .WithMany()
                         .HasForeignKey("ResponsibleUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("PrimaryUser");

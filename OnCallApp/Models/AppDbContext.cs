@@ -19,6 +19,19 @@ namespace OnCallApp.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            // SQL Server 'multiple cascade paths' hatasını önlemek için:
+            modelBuilder.Entity<OnCallAssignment>()
+                .HasOne(a => a.PrimaryUser)
+                .WithMany()
+                .HasForeignKey(a => a.PrimaryUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<OnCallAssignment>()
+                .HasOne(a => a.ResponsibleUser)
+                .WithMany()
+                .HasForeignKey(a => a.ResponsibleUserId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

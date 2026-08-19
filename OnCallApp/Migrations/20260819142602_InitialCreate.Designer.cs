@@ -12,7 +12,7 @@ using OnCallApp.Models;
 namespace OnCallApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260819135133_InitialCreate")]
+    [Migration("20260819142602_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -171,13 +171,13 @@ namespace OnCallApp.Migrations
                     b.HasOne("User", "PrimaryUser")
                         .WithMany()
                         .HasForeignKey("PrimaryUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("User", "ResponsibleUser")
                         .WithMany()
                         .HasForeignKey("ResponsibleUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("PrimaryUser");
