@@ -1,0 +1,1 @@
+using Microsoft.AspNetCore.Identity; using System; public class User { } class Program { static void Main() { var hasher = new PasswordHasher<User>(); Console.WriteLine(hasher.HashPassword(new User(), "Admin123!")); } }

@@ -63,6 +63,24 @@ namespace OnCallApp.Models
                     IsActive = true 
                 }
             );
+
+            // 3. Initial Admin User
+            modelBuilder.Entity<User>().HasData(
+                new User
+                {
+                    Id = 1,
+                    UnitId = 1, // Yazılım
+                    RoleId = 3, // Admin
+                    FullName = "System Admin",
+                    Email = "admin@ordinatrum.com.tr",
+                    PhoneNumber = "+905550000000",
+                    PasswordHash = "AQAAAAIAAYagAAAAEPheZhhkwERrfyGrEkncR0sCZJGX5ikgbpIUv2tfOXsaRZD9INHGN5uXxkJhUoVnEA==", // Admin123!
+                    MustChangePassword = false,
+                    AccessFailedCount = 0,
+                    IncludeInRotation = false,
+                    IsActive = true
+                }
+            );
         }
     }
 }

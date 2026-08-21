@@ -1,9 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using OnCallApp.Models;
 
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Veritabanı Provider seçimi
+// Database Provider selection
 var provider = builder.Configuration["Database:Provider"] ?? "SqlServer";
 
 if (provider == "SqlServer")
@@ -13,11 +17,31 @@ if (provider == "SqlServer")
 }
 else if (provider == "Postgres")
 {
-    // Postgres eklendiğinde buraya yazılır
+    // PostgreSQL configuration
 }
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
+// Add services and global authorize filter
+builder.Services.AddControllersWithViews(options =>
+{
+    var policy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
+    options.Filters.Add(new AuthorizeFilter(policy));
+});
+
+// Configure Cookie Authentication
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Login";
+        options.LogoutPath = "/Account/Logout";
+        options.AccessDeniedPath = "/Account/AccessDenied";
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.SameSite = SameSiteMode.Lax;
+        options.ExpireTimeSpan = TimeSpan.FromHours(8);
+        options.SlidingExpiration = true;
+    });
 
 var app = builder.Build();
 
@@ -34,6 +58,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
