@@ -1,0 +1,41 @@
+@model IEnumerable<OnCallApp.ViewModels.UserViewModel>
+@{
+    ViewData["Title"] = "Kullanıcılar";
+}
+
+<h1>Kullanıcılar Sayfası</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Yeni Kullanıcı Ekle</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.FullName)</th>
+            <th>@Html.DisplayNameFor(model => model.Email)</th>
+            <th>@Html.DisplayNameFor(model => model.UnitId)</th>
+            <th>@Html.DisplayNameFor(model => model.RoleId)</th>
+            <th>@Html.DisplayNameFor(model => model.IncludeInRotation)</th>
+            <th>@Html.DisplayNameFor(model => model.IsActive)</th>
+            <th>İşlemler</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.FullName)</td>
+            <td>@Html.DisplayFor(modelItem => item.Email)</td>
+            <td>@Html.DisplayFor(modelItem => item.UnitName)</td>
+            <td>@Html.DisplayFor(modelItem => item.RoleName)</td>
+            <td>@(item.IncludeInRotation ? "Evet" : "Hayır")</td>
+            <td>@(item.IsActive ? "Evet" : "Hayır")</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Düzenle</a> 
+                <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Silmek/pasife almak istediğinize emin misiniz?');">Sil</button>
+                </form>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

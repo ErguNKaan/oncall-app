@@ -1,9 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using OnCallApp.Models;
-
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using OnCallApp.Repositories.Interfaces;
+using OnCallApp.Repositories.Implementations;
+using OnCallApp.Services.Interfaces;
+using OnCallApp.Services.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +45,12 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.ExpireTimeSpan = TimeSpan.FromHours(8);
         options.SlidingExpiration = true;
     });
+
+// Register Dependency Injection
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped<IUnitService, UnitService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
 
 var app = builder.Build();
 
