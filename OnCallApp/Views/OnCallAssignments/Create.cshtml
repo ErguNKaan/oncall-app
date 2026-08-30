@@ -1,0 +1,70 @@
+@using OnCallApp.Models
+@model OnCallApp.ViewModels.OnCallAssignmentViewModel
+@{
+    ViewData["Title"] = "Yeni İcap";
+}
+
+<h1>Yeni İcap Ataması (Manuel)</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            
+            <div class="mb-3">
+                <label asp-for="StartsAt" class="control-label"></label>
+                <input asp-for="StartsAt" class="form-control" type="datetime-local" />
+                <span asp-validation-for="StartsAt" class="text-danger"></span>
+            </div>
+            
+            <div class="mb-3">
+                <label asp-for="EndsAt" class="control-label"></label>
+                <input asp-for="EndsAt" class="form-control" type="datetime-local" />
+                <span asp-validation-for="EndsAt" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="DayType" class="control-label"></label>
+                <select asp-for="DayType" class="form-select" asp-items="Html.GetEnumSelectList<DayType>()">
+                    <option value="">-- Gün Tipi Seçin --</option>
+                </select>
+                <span asp-validation-for="DayType" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="PrimaryUserId" class="control-label"></label>
+                <select asp-for="PrimaryUserId" class="form-select" asp-items="Model.Users">
+                    <option value="">-- Asıl Sorumlu Seçin --</option>
+                </select>
+                <span asp-validation-for="PrimaryUserId" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ResponsibleUserId" class="control-label"></label>
+                <select asp-for="ResponsibleUserId" class="form-select" asp-items="Model.Users">
+                    <option value="">-- Fiili Sorumlu Seçin --</option>
+                </select>
+                <span asp-validation-for="ResponsibleUserId" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Note" class="control-label"></label>
+                <input asp-for="Note" class="form-control" />
+                <span asp-validation-for="Note" class="text-danger"></span>
+            </div>
+
+            <!-- Source is forced to ManualAdmin -->
+            <input type="hidden" asp-for="Source" value="ManualAdmin" />
+            
+            <div class="mb-3">
+                <input type="submit" value="Kaydet" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Listeye Dön</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

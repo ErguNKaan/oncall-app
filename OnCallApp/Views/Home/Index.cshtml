@@ -1,8 +1,39 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    ViewData["Title"] = "Ana Sayfa - Takvim";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="text-center mb-4">
+    <h1 class="display-4">Hoş Geldiniz</h1>
+    <p>Aşağıdaki takvimden tüm icap (nöbet) atamalarını görebilirsiniz.</p>
 </div>
+
+<!-- FullCalendar Container -->
+<div id='calendar'></div>
+
+@section Scripts {
+    <!-- FullCalendar CDN files -->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'tr',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                buttonText: {
+                    today: 'Bugün',
+                    month: 'Ay',
+                    week: 'Hafta',
+                    day: 'Gün'
+                },
+                events: '/Home/GetCalendarData', // Fetch events from our backend API
+                eventColor: '#007bff' // Bootstrap primary color for plain look
+            });
+            calendar.render();
+        });
+    </script>
+}

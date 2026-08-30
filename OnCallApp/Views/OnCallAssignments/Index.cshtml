@@ -1,0 +1,40 @@
+@model IEnumerable<OnCallApp.ViewModels.OnCallAssignmentViewModel>
+@{
+    ViewData["Title"] = "İcap Listesi";
+}
+
+<h1>Manuel İcap Atama ve Liste</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Yeni İcap Ekle (Manuel)</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.StartsAt)</th>
+            <th>@Html.DisplayNameFor(model => model.EndsAt)</th>
+            <th>@Html.DisplayNameFor(model => model.DayType)</th>
+            <th>@Html.DisplayNameFor(model => model.PrimaryUserId)</th>
+            <th>@Html.DisplayNameFor(model => model.ResponsibleUserId)</th>
+            <th>@Html.DisplayNameFor(model => model.Source)</th>
+            <th>İşlemler</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>@item.StartsAt.ToString("g")</td>
+            <td>@item.EndsAt.ToString("g")</td>
+            <td>@item.DayType</td>
+            <td>@Html.DisplayFor(modelItem => item.PrimaryUserName)</td>
+            <td>@Html.DisplayFor(modelItem => item.ResponsibleUserName)</td>
+            <td>@item.Source</td>
+            <td>
+                <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Silmek istediğinize emin misiniz?');">Sil</button>
+                </form>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
