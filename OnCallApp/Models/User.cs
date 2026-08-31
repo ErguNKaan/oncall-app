@@ -8,16 +8,16 @@ public class User
     public required string Email { get; set; }
     public required string PhoneNumber { get; set; }
     
-    public required string PasswordHash { get; set; } // hashlenmiş şifre
-    public bool MustChangePassword { get; set; } // ilk girişte şifre değiştirme zorunluluğu
-    public int AccessFailedCount { get; set; } // başarısız giriş sayacı
-    public DateTime? LockoutEndAt { get; set; } // hesap kilitlenme süresi
-    public DateTime? LastLoginAt { get; set; } // son giriş zamanı
+    public required string PasswordHash { get; set; } // Hashed password
+    public bool MustChangePassword { get; set; } // Must change password on first login
+    public int AccessFailedCount { get; set; } // failed login counter
+    public DateTime? LockoutEndAt { get; set; } // Tiime for Account Lockout
+    public DateTime? LastLoginAt { get; set; } // Last Login as mentioned
     
-    public bool IncludeInRotation { get; set; } // icap rotasyonuna dahil mi?
-    public bool IsActive { get; set; } // pasif kullanıcı sisteme giremez
+    public bool IncludeInRotation { get; set; } // Included in rotation???
+    public bool IsActive { get; set; } // Passive user cannot login
     
-    // İlişkiler
+    // Relations
     public Unit Unit { get; set; } = null!;
     public Role Role { get; set; } = null!;
 }

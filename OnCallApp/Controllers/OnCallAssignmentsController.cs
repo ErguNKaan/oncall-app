@@ -13,11 +13,19 @@ namespace OnCallApp.Controllers
     {
         private readonly IOnCallAssignmentService _assignmentService;
         private readonly IUserService _userService;
+        private readonly IAutoAssignmentService _autoAssignmentService;
+        private readonly IUnitService _unitService;
 
-        public OnCallAssignmentsController(IOnCallAssignmentService assignmentService, IUserService userService)
+        public OnCallAssignmentsController(
+            IOnCallAssignmentService assignmentService, 
+            IUserService userService,
+            IAutoAssignmentService autoAssignmentService,
+            IUnitService unitService)
         {
             _assignmentService = assignmentService;
             _userService = userService;
+            _autoAssignmentService = autoAssignmentService;
+            _unitService = unitService;
         }
 
         public async Task<IActionResult> Index()
@@ -88,6 +96,40 @@ namespace OnCallApp.Controllers
         {
             await _assignmentService.DeleteAssignmentAsync(id);
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> AutoAssign()
+        {
+            var model = new AutoAssignViewModel();
+            await PopulateAutoAssignDropdownsAsync(model);
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AutoAssign(AutoAssignViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await _autoAssignmentService.GenerateAutoAssignmentsAsync(model.StartDate, model.EndDate, model.UnitId);
+                    TempData["SuccessMessage"] = "Otomatik atama başarıyla tamamlandı.";
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", ex.Message);
+                }
+            }
+            await PopulateAutoAssignDropdownsAsync(model);
+            return View(model);
+        }
+
+        private async Task PopulateAutoAssignDropdownsAsync(AutoAssignViewModel model)
+        {
+            var units = await _unitService.GetAllUnitsAsync();
+            model.Units = units.Where(u => u.IsActive).Select(u => new SelectListItem { Value = u.Id.ToString(), Text = u.Name });
         }
 
         private async Task PopulateDropdownsAsync(OnCallAssignmentViewModel model)

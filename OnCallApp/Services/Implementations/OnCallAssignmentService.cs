@@ -4,6 +4,7 @@ using OnCallApp.Services.Interfaces;
 
 namespace OnCallApp.Services.Implementations
 {
+    // Service class for managing on-call shift assignments and validation rules.
     public class OnCallAssignmentService : IOnCallAssignmentService
     {
         private readonly IRepository<OnCallAssignment> _assignmentRepository;
@@ -13,11 +14,13 @@ namespace OnCallApp.Services.Implementations
             _assignmentRepository = assignmentRepository;
         }
 
+        // Retrieves all on-call assignments including related user details.
         public async Task<IEnumerable<OnCallAssignment>> GetAllAssignmentsAsync()
         {
             return await _assignmentRepository.GetAllAsync(null, "PrimaryUser", "ResponsibleUser");
         }
 
+        // Retrieves all on-call assignments for a specific responsible user.
         public async Task<IEnumerable<OnCallAssignment>> GetAssignmentsByUserAsync(int userId)
         {
             return await _assignmentRepository.GetAllAsync(
@@ -27,6 +30,7 @@ namespace OnCallApp.Services.Implementations
             );
         }
 
+        // Retrieves a specific on-call assignment by its unique identifier.
         public async Task<OnCallAssignment?> GetAssignmentByIdAsync(int id)
         {
             return await _assignmentRepository.GetAsync(a => a.Id == id, "PrimaryUser", "ResponsibleUser");
@@ -49,12 +53,14 @@ namespace OnCallApp.Services.Implementations
             await _assignmentRepository.SaveAsync();
         }
 
+        // Updates an existing on-call assignment record.
         public async Task UpdateAssignmentAsync(OnCallAssignment assignment)
         {
             _assignmentRepository.Update(assignment);
             await _assignmentRepository.SaveAsync();
         }
 
+        // Deletes an on-call assignment by its unique identifier.
         public async Task DeleteAssignmentAsync(int id)
         {
             var assignment = await _assignmentRepository.GetAsync(a => a.Id == id);

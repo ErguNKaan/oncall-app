@@ -5,8 +5,16 @@
 
 <h1>Manuel İcap Atama ve Liste</h1>
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
 <p>
     <a asp-action="Create" class="btn btn-primary">Yeni İcap Ekle (Manuel)</a>
+    <a asp-action="AutoAssign" class="btn btn-success">Otomatik Dağıtım Çalıştır</a>
 </p>
 <table class="table">
     <thead>

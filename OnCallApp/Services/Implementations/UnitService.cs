@@ -4,6 +4,7 @@ using OnCallApp.Services.Interfaces;
 
 namespace OnCallApp.Services.Implementations
 {
+    // Service class for managing organizational units.
     public class UnitService : IUnitService
     {
         private readonly IRepository<Unit> _unitRepository;
@@ -19,6 +20,7 @@ namespace OnCallApp.Services.Implementations
             return await _unitRepository.GetAllAsync();
         }
 
+        // Retrieves a specific unit by its unique identifier.
         public async Task<Unit?> GetUnitByIdAsync(int id)
         {
             return await _unitRepository.GetAsync(u => u.Id == id);

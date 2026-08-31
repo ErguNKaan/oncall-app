@@ -4,28 +4,28 @@ public class OnCallAssignment
 {
     public int Id { get; set; }
     
-    // Zaman sınırları
-    public DateTime StartsAt { get; set; } // Slot başlangıcı
-    public DateTime EndsAt { get; set; }   // Slot bitişi
+    // Time limits
+    public DateTime StartsAt { get; set; } // Slot start
+    public DateTime EndsAt { get; set; }   // Slot end
     
-    // Gün tipi (WorkDay, Weekend, PublicHoliday vb.) enum olarak tutulacak
+    // Day type (WorkDay, Weekend, PublicHoliday vb.) kept as enum 
     public DayType DayType { get; set; } 
 
-    // Kişiler (Asıl kişi ve Fiili sorumlu ayrı tutuluyor)
+    // Persons (Asıl kişi ve fiili sorumlu ayrı tutulcak)
     public int PrimaryUserId { get; set; } // Rotasyon gereği asıl olması gereken kişi
     public int ResponsibleUserId { get; set; } // O an gerçekten icapçı olan kişi
     
-    // Değişim nedeni izlenebilir olmalı
+    // Reason of change must be traceable
     public AssignmentSource Source { get; set; } // Auto, LeaveShift, Transfer, HolidayDistribution, ManualAdmin
     
-    public string? Note { get; set; } // "Uygun yedek bulunamadı" vb. notlar için
+    public string? Note { get; set; } // for such notes as "uygun yedek bulunamadı" etc.
 
-    // İlişkiler
+    // Relations
     public User PrimaryUser { get; set; } = null!;
     public User ResponsibleUser { get; set; } = null!;
 }
 
-// Bu enum'ları kodda magic number dolaşmaması için kullanıyoruz
+// Using these enums to prevent magic numbers wandering around in the code
 public enum DayType
 {
     WorkDay = 1,
@@ -35,9 +35,9 @@ public enum DayType
 
 public enum AssignmentSource
 {
-    Auto = 1,                 // Sistem otomatik atadı
-    LeaveShift = 2,           // İzin nedeniyle kaydı
-    Transfer = 3,             // Devir/Takas yapıldı
-    HolidayDistribution = 4,  // Tatil dağıtımı
-    ManualAdmin = 5           // Admin elle değiştirdi
+    Auto = 1,                 // Auto assigned by system
+    LeaveShift = 2,           // due to permission 
+    Transfer = 3,             // transfer made
+    HolidayDistribution = 4,  // holiday distribution as mentioned
+    ManualAdmin = 5           // changed manually by admin
 }

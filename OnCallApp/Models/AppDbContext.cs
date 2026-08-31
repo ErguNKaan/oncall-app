@@ -69,7 +69,7 @@ namespace OnCallApp.Models
                 new User
                 {
                     Id = 1,
-                    UnitId = 1, // Yazılım
+                    UnitId = 1, // software dep.
                     RoleId = 3, // Admin
                     FullName = "System Admin",
                     Email = "admin@ordinatrum.com.tr",

@@ -1,8 +1,8 @@
 public class Role
 {
     public int Id { get; set; }
-    public required string Name { get; set; } // Sadece "Employee", "UnitManager", "Admin" olacak
+    public required string Name { get; set; } //  "Employee", "UnitManager", "Admin" only
     
-    // İlişkiler
+    // Relations
     public ICollection<User> Users { get; set; } = new List<User>();
 }

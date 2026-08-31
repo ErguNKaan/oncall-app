@@ -52,6 +52,7 @@ builder.Services.AddScoped<IUnitService, UnitService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IOnCallAssignmentService, OnCallAssignmentService>();
+builder.Services.AddScoped<IAutoAssignmentService, AutoAssignmentService>();
 
 var app = builder.Build();
 
