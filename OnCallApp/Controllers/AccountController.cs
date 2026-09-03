@@ -73,7 +73,8 @@ namespace OnCallApp.Controllers
                 new Claim("roleName", user.Role.Name),
                 new Claim("fullName", user.FullName),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role.Name)
+                new Claim(ClaimTypes.Role, user.Role.Name),
+                new Claim("MustChangePassword", user.MustChangePassword.ToString())
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -88,13 +89,66 @@ namespace OnCallApp.Controllers
                 new ClaimsPrincipal(claimsIdentity), 
                 authProperties);
 
-            // Check if MustChangePassword is true (to be handled by middleware, but redirecting to Profile for now)
             if (user.MustChangePassword)
             {
-                // return RedirectToAction("ChangePassword", "Profile");
+                return RedirectToAction("ChangePassword", "Account");
             }
 
             return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var userIdClaim = User.FindFirst("userId")?.Value;
+            if (string.IsNullOrEmpty(userIdClaim))
+            {
+                return RedirectToAction("Login");
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == int.Parse(userIdClaim));
+            if (user == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            var passwordHasher = new PasswordHasher<User>();
+            var result = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, model.OldPassword);
+
+            if (result == PasswordVerificationResult.Failed)
+            {
+                ModelState.AddModelError(string.Empty, "Mevcut parolanız yanlış.");
+                return View(model);
+            }
+
+            if (model.OldPassword == model.NewPassword)
+            {
+                ModelState.AddModelError(string.Empty, "Yeni parolanız eski parolanızla aynı olamaz.");
+                return View(model);
+            }
+
+            user.PasswordHash = passwordHasher.HashPassword(user, model.NewPassword);
+            user.MustChangePassword = false;
+
+            _context.Update(user);
+            await _context.SaveChangesAsync();
+
+            // Sign out to force re-login with new password and clear the MustChangePassword claim
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            return RedirectToAction("Login", new { message = "Parolanız başarıyla değiştirildi. Lütfen yeni parolanızla tekrar giriş yapın." });
         }
 
         public async Task<IActionResult> Logout()

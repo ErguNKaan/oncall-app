@@ -30,6 +30,7 @@ builder.Services.AddControllersWithViews(options =>
                     .RequireAuthenticatedUser()
                     .Build();
     options.Filters.Add(new AuthorizeFilter(policy));
+    options.Filters.Add(new OnCallApp.Filters.MustChangePasswordAttribute());
 });
 
 // Configure Cookie Authentication
