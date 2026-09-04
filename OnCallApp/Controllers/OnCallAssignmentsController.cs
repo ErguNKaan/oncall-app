@@ -141,5 +141,28 @@ namespace OnCallApp.Controllers
                 .Select(u => new SelectListItem { Value = u.Id.ToString(), Text = u.FullName })
                 .ToList();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> ExportToCsv()
+        {
+            var assignments = await _assignmentService.GetAllAssignmentsAsync();
+            
+            var builder = new System.Text.StringBuilder();
+            builder.AppendLine("Baslangic,Bitis,Gun Tipi,Asil Sorumlu,Fiili Sorumlu,Atama Kaynagi,Not");
+
+            foreach (var a in assignments.OrderBy(a => a.StartsAt))
+            {
+                var startsAt = a.StartsAt.ToString("yyyy-MM-dd HH:mm");
+                var endsAt = a.EndsAt.ToString("yyyy-MM-dd HH:mm");
+                var primaryUser = a.PrimaryUser?.FullName ?? "";
+                var responsibleUser = a.ResponsibleUser?.FullName ?? "";
+                var note = a.Note?.Replace(",", " ") ?? ""; // Avoid CSV breaking
+
+                builder.AppendLine($"{startsAt},{endsAt},{a.DayType},{primaryUser},{responsibleUser},{a.Source},{note}");
+            }
+
+            var fileBytes = System.Text.Encoding.UTF8.GetBytes(builder.ToString());
+            return File(fileBytes, "text/csv", $"NobetListesi_{DateTime.Now:yyyyMMdd}.csv");
+        }
     }
 }
